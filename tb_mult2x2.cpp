@@ -1,17 +1,18 @@
 #include <stdio.h>
+#include <ap_int.h>
 
-void mult2x2( int a[2][2], int b[2][2], int out[2][2]);
+void mult2x2( ap_int<8> a[2][2], ap_int<8> b[2][2], ap_int<16> out[2][2]);
 
 /**
  * Given a pair of input vectors, returns true if the multiplier worked correctly.
  */
-bool test_case( int a[2][2], int b[2][2] ) {
+bool test_case( ap_int<8> a[2][2], ap_int<8> b[2][2] ) {
 
 	printf("Testing matrix inputs a=[%d %d] b=[%d %d]\n", a[0][0],a[0][1],b[0][0],b[0][1]);
 	printf("                        [%d %d]   [%d %d]\n", a[1][0],a[1][1],b[1][0],b[1][1]);
 
 	// Take the input, run it through the filter, see if it worked.
-	int actual[2][2];
+	ap_int<16> actual[2][2];
 	mult2x2(a, b, actual);
 
 	// Do it manually to find out what the result is supposed to be
@@ -44,13 +45,13 @@ bool test_case( int a[2][2], int b[2][2] ) {
 int main() {
 
 	// Basic function tests, edge cases
-	if (!test_case((int[2][2]){ {1, 3}, {2, 4} }, (int[2][2]){ {5, 7}, {6, 8} }))
+	if (!test_case((ap_int<8>[2][2]){ {1, 3}, {2, 4} }, (ap_int<8>[2][2]){ {5, 7}, {6, 8} }))
 		return -1;
-	if (!test_case((int[2][2]){ {1, 2}, {3, 4} }, (int[2][2]){ {1, 0}, {0, 1} }))
+	if (!test_case((ap_int<8>[2][2]){ {1, 2}, {3, 4} }, (ap_int<8>[2][2]){ {1, 0}, {0, 1} }))
 		return -1;
-	if (!test_case((int[2][2]){ {2147483647, -2147483648}, {-2147483648, 2147483647} }, (int[2][2]){ {1, 0}, {0, 1} }))
+	if (!test_case((ap_int<8>[2][2]){ {127, -128}, {-128, 127} }, (ap_int<8>[2][2]){ {1, 0}, {0, 1} }))
 		return -1;
-	if (!test_case((int[2][2]){ {-2147483648, -2147483648}, {-2147483648, 2147483647} }, (int[2][2]){ {1, 3}, {-3, 2147483647} }))
+	if (!test_case((ap_int<8>[2][2]){ {-128, -128}, {-128, 127} }, (ap_int<8>[2][2]){ {1, 3}, {-3, 127} }))
 		return -1;
 
 	return 0;
